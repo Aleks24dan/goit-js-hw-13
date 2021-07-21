@@ -1,0 +1,59 @@
+{
+  "posts": [
+    {
+      "id": 1,
+      "title": "json-server",
+      "author": "typicode"
+    },
+    {
+      "title": "Alelluja",
+      "author": "Happy",
+      "id": 2
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "body": "some comment",
+      "postId": 1
+    },
+    {
+      "body": "oky-doki",
+      "postId": 2,
+      "id": 2
+    },
+    {
+      "title": "Tesla",
+      "author": "Ilon Mask",
+      "id": 3
+    },
+    {
+      "title": "Tesla",
+      "author": "Ilon Mask",
+      "id": 5
+    },
+    {
+      "title": "Tesla",
+      "author": "Ilon Mask",
+      "id": 6
+    },
+    {
+      "title": "Do what you want",
+      "author": "Piotr I",
+      "id": 7
+    },
+    {
+      "title": "Tesla",
+      "author": "Ilon Mask",
+      "id": 8
+    },
+    {
+      "title": "Do what you want",
+      "author": "Piotr I",
+      "id": 9
+    }
+  ],
+  "profile": {
+    "name": "typicode"
+  }
+}
