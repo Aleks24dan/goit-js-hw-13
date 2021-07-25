@@ -1,36 +1,95 @@
-const form = document.querySelector('.search-form');
-const submit = document.querySelector('button');
-const KEY_USER = '22553588-f2f977a115121553e22566e7d';
-const BASE_URL = 'https://pixabay.com/api/'
-const axios = require('axios').default;
-const gallery = document.querySelector('.gallery');
 import Notiflix from 'notiflix';
-import templateCard from './template/template-card.hbs'
-form.addEventListener('submit', onSubmit);
-const dateForTmpl = [];
+import templateCard from './template/template-card.hbs';
+import getRefs from './js/refs';
+import './sass/main.scss';
+import NewQueryService from './js/query-service';
+const refs = getRefs();
 
-function onSubmit(e) {
+refs.form.addEventListener('submit', onSubmit);
+// refs.moreBtn.addEventListener('click', onMoreBtn);
+window.addEventListener('scroll', onScroll);
+const queryService = new NewQueryService();
+
+
+async function onSubmit(e) {
     e.preventDefault();
-    let inputValue = e.currentTarget.elements.searchQuery.value;
+    if (e.currentTarget.elements.searchQuery.value === '') {
+        return Notiflix.Notify.warning('ops! Nothing is entered!'); 
+    }
+    
+     queryService.query = e.currentTarget.elements.searchQuery.value;
+    queryService.resetPage();
+   await queryService.fetchDate().then(({ hits, totalHits })=> {
+        clearGallery();
+       Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
+        renderGallery(hits);
+    });
 
-    const url = `${BASE_URL}?key=${KEY_USER}&q=${inputValue}&image_type=photo&orientation=horizontal&safesearch=true&page=1&per_page=10`;
-    axios.get(url)
-        .then(res => res.data)
-        .then(res => {
-            renderGalery(res.hits);
-        })
-        .catch(res => console.log(res));
+    // removeClassIshidden();
+        
+}
+
+// function onMoreBtn(e) {
+//     addClassIshidden();
+//     try {
+//        queryService.fetchDate().then(({hits}) => {
+        // if (hits.length === 0) {
+        //     return errorMessage('the end');
+        // }
+//            console.log(hits);
+//         renderGallery(hits);
+//        });
+        
+//     setTimeout(() => removeClassIshidden(), 1000); 
+//     }
+//     catch {
+//         console.log('error');
+//     }   
+
+// }
+
+async function onScroll() {
+    
+    const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
+    
+    if (scrollTop + clientHeight > scrollHeight - 10) {
+       
+        try {
+        
+            await queryService.fetchDate().then(({ hits }) => {
+        
+                if (hits.length === 0) {
+                    
+                }
+                renderGallery(hits);
+            });
+        }
+        
+        catch (error) {
+            Notiflix.Notify.info("We're sorry, but you've reached the end of search results.");
+                   
+        }
+        return;
+    }
+    return;
+}
+// function removeClassIshidden() {
+//     refs.moreBtn.classList.remove('is-hiden');
+// }
+
+// function addClassIshidden() {
+//     refs.moreBtn.classList.add('is-hiden');
+// }
+
+
+
+
+// You can type your text in String format.Notiflix.Notify.Failure('Qui timide rogat docet negare');
+function renderGallery(t) {
+    refs.gallery.insertAdjacentHTML('beforeend', templateCard(t));
 
 }
 
-
-
-
-function errorMessage(message) {
-    Notiflix.Notify.info(message);
-}
-
-function renderGalery(t) {
-    gallery.innerHTML = templateCard(t);
-
+function clearGallery() {
+    refs.gallery.innerHTML = '';
 }

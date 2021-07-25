@@ -1,19 +1,21 @@
-{{#each content}}
+{{#each this}}
 <div class="photo-card">
-    <img src="{{webformatURL}}" alt="{{tags}}" loading="lazy" />
-    <div class="info">
+    <div class="wrap">
+    <img src="{{webformatURL}}" alt="{{tags}}" loading="lazy"/>
+   
+        <div class="info">
         <p class="info-item">
-            <b>{{Likes}}</b>
+            <b>Likes </b> <span class="">{{likes}}</span>
         </p>
         <p class="info-item">
-            <b>{{Views}}</b>
+            <b>Views </b>{{views}}
         </p>
+        <p class="info-item"><b>Comments </b>{{comments}}</p>
         <p class="info-item">
-            <b>{{Comments}}</b>
-        </p>
-        <p class="info-item">
-            <b>{{Downloads}}</b>
+            <b>Downloads </b>{{downloads}}
         </p>
     </div>
+    </div>
+    
 </div>
 {{/each}}
