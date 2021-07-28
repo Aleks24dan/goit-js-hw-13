@@ -13,7 +13,11 @@ export default class QueryService{
     const url = `${this.BASE_URL}?key=${this.KEY_USER}&q=${this.inputValue}&image_type=photo&orientation=horizontal&safesearch=true&page=${this.page}&per_page=${this.limit}`;
      const response = await axios.get(url);
     this.incriment();
-    return response.data;
+     if (response.data.hits < 1) {
+          return;
+      } else {
+          return response.data;
+    };
     }
 
     incriment() {

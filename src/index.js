@@ -51,7 +51,6 @@ async function onSubmit(e) {
 async function onScroll() {
     
     const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
-    
     if (scrollTop + clientHeight > scrollHeight - 10) {
        
         try {
@@ -59,17 +58,16 @@ async function onScroll() {
             await queryService.fetchDate().then(({ hits }) => {
         
                 if (hits.length === 0) {
-                    
+                    return;
                 }
                 renderGallery(hits);
             });
         }
         
         catch (error) {
-            Notiflix.Notify.info("We're sorry, but you've reached the end of search results.");
-                   
+            Notiflix.Notify.info("We're sorry, but you've reached the end of search results.");         
         }
-        return;
+        
     }
     return;
 }
