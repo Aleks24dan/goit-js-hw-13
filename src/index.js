@@ -5,6 +5,13 @@ import './sass/main.scss';
 import NewQueryService from './js/query-service';
 const refs = getRefs();
 
+Notiflix.Notify.init({
+  distance: '5%',
+  fontSize: '15px',
+  width: '350px',
+  showOnlyTheLastOne: true,
+});
+
 refs.form.addEventListener('submit', onSubmit);
 // refs.moreBtn.addEventListener('click', onMoreBtn);
 window.addEventListener('scroll', onScroll);
@@ -17,7 +24,7 @@ async function onSubmit(e) {
         return Notiflix.Notify.warning('ops! Nothing is entered!'); 
     }
     
-     queryService.query = e.currentTarget.elements.searchQuery.value;
+     queryService.query = e.currentTarget.elements.searchQuery.value.trim();
     queryService.resetPage();
    await queryService.fetchDate().then(({ hits, totalHits })=> {
         clearGallery();
@@ -52,14 +59,10 @@ async function onScroll() {
     
     const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
     if (scrollTop + clientHeight > scrollHeight - 10) {
-       
+      
         try {
         
             await queryService.fetchDate().then(({ hits }) => {
-        
-                if (hits.length === 0) {
-                    return;
-                }
                 renderGallery(hits);
             });
         }
