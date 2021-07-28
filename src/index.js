@@ -63,6 +63,7 @@ async function onScroll() {
         try {
         
             await queryService.fetchDate().then(({ hits }) => {
+                if(hits == 0){}
                 renderGallery(hits);
             });
         }
