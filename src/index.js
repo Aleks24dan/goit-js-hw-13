@@ -2,8 +2,10 @@ import Notiflix from 'notiflix';
 import templateCard from './template/template-card.hbs';
 import getRefs from './js/refs';
 import './sass/main.scss';
-import NewQueryService from './js/query-service';
+import QueryService from './js/query-service';
 const refs = getRefs();
+const queryService = new QueryService();
+let numberOfPages = 0;
 
 Notiflix.Notify.init({
   distance: '5%',
@@ -12,24 +14,28 @@ Notiflix.Notify.init({
   showOnlyTheLastOne: true,
 });
 
+
 refs.form.addEventListener('submit', onSubmit);
 // refs.moreBtn.addEventListener('click', onMoreBtn);
-window.addEventListener('scroll', onScroll);
-const queryService = new NewQueryService();
+
 
 
 async function onSubmit(e) {
+
     e.preventDefault();
+    window.addEventListener('scroll', onScroll);
     if (e.currentTarget.elements.searchQuery.value === '') {
         return Notiflix.Notify.warning('ops! Nothing is entered!'); 
     }
     
-     queryService.query = e.currentTarget.elements.searchQuery.value.trim();
+    queryService.query = e.currentTarget.elements.searchQuery.value.trim();
     queryService.resetPage();
-   await queryService.fetchDate().then(({ hits, totalHits })=> {
+    await queryService.fetchDate().then(({ hits, totalHits }) => {
+        numberOfPages = Math.ceil(totalHits / queryService.limit);
+        
         clearGallery();
        Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
-        renderGallery(hits);
+       renderGallery(hits);
     });
 
     // removeClassIshidden();
@@ -55,26 +61,34 @@ async function onSubmit(e) {
 
 // }
 
+
 async function onScroll() {
     
     const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
     if (scrollTop + clientHeight > scrollHeight - 10) {
       
         try {
-        
-            await queryService.fetchDate().then(({ hits }) => {
-                if(hits == 0){}
-                renderGallery(hits);
-            });
+             await queryService.fetchDate().then(data => {
+                 if (numberOfPages === queryService.page) {
+                 window.removeEventListener('scroll', onScroll);    
+                     Notiflix.Notify.info("We're sorry, but you've reached the end of search results.");
+                     return
+    
+}
+                renderGallery(data.hits);
+            
+           });
+                       
         }
         
         catch (error) {
-            Notiflix.Notify.info("We're sorry, but you've reached the end of search results.");         
+            console.log(error);
         }
         
     }
-    return;
 }
+
+
 // function removeClassIshidden() {
 //     refs.moreBtn.classList.remove('is-hiden');
 // }

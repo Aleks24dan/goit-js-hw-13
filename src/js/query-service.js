@@ -12,13 +12,9 @@ export default class QueryService{
  async fetchDate() {
     const url = `${this.BASE_URL}?key=${this.KEY_USER}&q=${this.inputValue}&image_type=photo&orientation=horizontal&safesearch=true&page=${this.page}&per_page=${this.limit}`;
      const response = await axios.get(url);
-    this.incriment();
-     if (response.data.hits < 1) {
-          return;
-      } else {
-          return response.data;
+     this.incriment();
+     return response.data;
     };
-    }
 
     incriment() {
         this.page += 1;
@@ -29,14 +25,16 @@ export default class QueryService{
     }
 
      get query(){
-       return this.inputValue = newQuery;
+         return this.inputValue;
     }
 
     set query(newQuery){
         this.inputValue = newQuery;
     }
-
-
-      
+     
+    // get limit(){
+    //    return this.limit;
+    // }
+   
 }
 
