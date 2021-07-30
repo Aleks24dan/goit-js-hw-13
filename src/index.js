@@ -1,4 +1,7 @@
 import Notiflix from 'notiflix';
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.css';
+import throttle from 'lodash.throttle';
 import templateCard from './template/template-card.hbs';
 import getRefs from './js/refs';
 import './sass/main.scss';
@@ -18,12 +21,14 @@ Notiflix.Notify.init({
 refs.form.addEventListener('submit', onSubmit);
 // refs.moreBtn.addEventListener('click', onMoreBtn);
 
-
+const lightbox = new SimpleLightbox('.gallery a', {
+  /* options */
+});
 
 async function onSubmit(e) {
 
     e.preventDefault();
-    window.addEventListener('scroll', onScroll);
+    window.addEventListener('scroll', throttle(onScroll,2000));
     if (e.currentTarget.elements.searchQuery.value === '') {
         return Notiflix.Notify.warning('ops! Nothing is entered!'); 
     }
@@ -35,7 +40,8 @@ async function onSubmit(e) {
         
         clearGallery();
        Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
-       renderGallery(hits);
+        renderGallery(hits);
+        lightbox.refresh();
     });
 
     // removeClassIshidden();
