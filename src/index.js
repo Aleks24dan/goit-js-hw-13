@@ -28,7 +28,7 @@ const lightbox = new SimpleLightbox('.gallery a', {
 async function onSubmit(e) {
 
     e.preventDefault();
-    window.addEventListener('scroll', throttle(onScroll,2000));
+    window.addEventListener('scroll', onScroll,2000);
     if (e.currentTarget.elements.searchQuery.value === '') {
         return Notiflix.Notify.warning('ops! Nothing is entered!'); 
     }
@@ -36,7 +36,7 @@ async function onSubmit(e) {
     queryService.query = e.currentTarget.elements.searchQuery.value.trim();
     queryService.resetPage();
     await queryService.fetchDate().then(({ hits, totalHits }) => {
-        numberOfPages = Math.ceil(totalHits / queryService.limit);
+        numberOfPages = Math.ceil(560 / queryService.limit);
         
         clearGallery();
        Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
@@ -79,10 +79,9 @@ async function onScroll() {
                  window.removeEventListener('scroll', onScroll);    
                      Notiflix.Notify.info("We're sorry, but you've reached the end of search results.");
                      return
-    
-}
-                renderGallery(data.hits);
-            
+                 }
+                 renderGallery(data.hits);
+              
            });
                        
         }
