@@ -28,17 +28,17 @@ const lightbox = new SimpleLightbox('.gallery a', {
 async function onSubmit(e) {
 
     e.preventDefault();
-    window.addEventListener('scroll', onScroll,2000);
+    window.addEventListener('scroll', onScroll);
     if (e.currentTarget.elements.searchQuery.value === '') {
         return Notiflix.Notify.warning('ops! Nothing is entered!'); 
     }
     
     queryService.query = e.currentTarget.elements.searchQuery.value.trim();
     queryService.resetPage();
+    clearGallery();
     await queryService.fetchDate().then(({ hits, totalHits }) => {
-        numberOfPages = Math.ceil(560 / queryService.limit);
+        numberOfPages = Math.ceil(totalHits / queryService.limit);
         
-        clearGallery();
        Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
         renderGallery(hits);
         lightbox.refresh();
@@ -81,8 +81,7 @@ async function onScroll() {
                      return
                  }
                  renderGallery(data.hits);
-              
-           });
+              });
                        
         }
         
